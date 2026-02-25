@@ -26,7 +26,9 @@ namespace MyFin.Controller
                 Type = a.Type,
                 InitialBalance = a.InitialBalance,
                 CurrentBalance = a.CurrentBalance,
-                TotalTransactions = _context.Transactions.Count(t => t.AccountId == a.AccountId)
+                TotalTransactions = _context.Transactions.Count(t => t.AccountId == a.AccountId),
+                UserId = a.UserId,
+                User = a.User
             });
             return Ok(result);
         }
@@ -50,7 +52,7 @@ namespace MyFin.Controller
         }
 
         [HttpPost]
-        public async Task<ActionResult<AccountDTO>> CreateAccount(AccountDTO dto)
+        public async Task<ActionResult<AccountDTO>> CreateAccount(CreateAccountDTO dto)
         {
             var account = new TBLAccount
             {
@@ -71,22 +73,22 @@ namespace MyFin.Controller
                 Name = account.Name,
                 Type = account.Type,
                 InitialBalance = account.InitialBalance,
-                CurrentBalance = account.CurrentBalance
+                CurrentBalance = account.CurrentBalance,
+                UserId = account.UserId
             };
 
             return CreatedAtAction(nameof(GetAccount), new { id = account.AccountId }, result);
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdateAccount(Guid id, AccountDTO dto)
+        public async Task<IActionResult> UpdateAccount(Guid id, UpdateAccountDTO dto)
         {
             var account = await _context.Accounts.FindAsync(id);
             if (account == null) return NotFound();
 
-            if (string.IsNullOrWhiteSpace(dto.Name))
-                account.Name = dto.Name;
-            if (dto.CurrentBalance >= 0)
-                account.CurrentBalance = dto.CurrentBalance;
+            if (!string.IsNullOrWhiteSpace(dto.Name)) account.Name = dto.Name;
+            if (!string.IsNullOrWhiteSpace(dto.Type)) account.Type = dto.Type;
+            if (dto.CurrentBalance >= 0) account.CurrentBalance = dto.CurrentBalance;
 
             await _context.SaveChangesAsync();
             return NoContent();
