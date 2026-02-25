@@ -10,6 +10,7 @@ namespace MyFin.Domain.Entities
         public string Description { get; set; } = string.Empty;
         public decimal Amount { get; set; }
         public DateTime DtTimeStamp { get; set; }
+        public TransactionType Type { get; set; }
 
         // FKs
         public Guid AccountId { get; set; }
