@@ -61,6 +61,8 @@ namespace MyFin.Controller
             var category = await _context.Categories.FirstOrDefaultAsync(a => a.Type == request.CategoryType);
             if (category == null) return NotFound($"Categoria de gasto {request.Type} não encontrada.");
 
+            if (request.Type.Equals(1) && category.Type == "Entrada") return BadRequest($"Uma transação do tipo {request.Type} não pode inserir uma quantia negativa, altere o campo Type para continuar.");
+
             var Transaction = new TBLTransaction
             {
                 TransactionId = Guid.NewGuid(),
