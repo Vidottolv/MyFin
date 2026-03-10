@@ -1,5 +1,6 @@
 ﻿using MyFin.Domain;
 using MyFin.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyFin.Application.DTOs
 {
@@ -8,6 +9,7 @@ namespace MyFin.Application.DTOs
         public Guid AccountId { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
+        public string AccountNumber { get; set; }
         public decimal InitialBalance { get; set; }
         public decimal CurrentBalance { get; set; }
         public decimal TotalTransactions { get; set; }
@@ -18,6 +20,7 @@ namespace MyFin.Application.DTOs
     {
         public string Name { get; set; }
         public string Type { get; set; }
+        public string AccountNumber { get; set; }
         public decimal InitialBalance { get; set; }
         public Guid UserId { get; set; }
     }

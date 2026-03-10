@@ -10,6 +10,8 @@ public class TBLAccount
     public string Type { get; set; } = string.Empty;
     public decimal InitialBalance { get; set; }
     public decimal CurrentBalance { get; set; }
+    [MaxLength(16)]
+    public string AccountNumber { get; set; }
     public Guid UserId { get; set; }
     public TBLUser User { get; set; }
     public ICollection<TBLTransaction> Transactions { get; set; } = new List<TBLTransaction>();

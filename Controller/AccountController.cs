@@ -24,6 +24,7 @@ namespace MyFin.Controller
                 AccountId = a.AccountId,
                 Name = a.Name,
                 Type = a.Type,
+                AccountNumber = a.AccountNumber,
                 InitialBalance = a.InitialBalance,
                 CurrentBalance = a.CurrentBalance,
                 TotalTransactions = _context.Transactions.Count(t => t.AccountId == a.AccountId),
@@ -34,34 +35,56 @@ namespace MyFin.Controller
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<AccountDTO>> GetAccount(Guid id)
+        public async Task<ActionResult<AccountDTO>> GetAccountById(Guid id)
         {
             var account = await _context.Accounts.FindAsync(id);
             if (account == null) return NotFound();
 
-            var dto = new AccountDTO
+            var request = new AccountDTO
             {
                 AccountId = account.AccountId,
                 Name = account.Name,
                 Type = account.Type,
+                AccountNumber = account.AccountNumber,
                 InitialBalance = account.InitialBalance,
                 CurrentBalance = account.CurrentBalance
             };
 
-            return Ok(dto);
+            return Ok(request);
+        }
+
+        [HttpGet("{accNumber}")]
+        public async Task<ActionResult<AccountDTO>> GetAccountByNumber(string accNumber)
+        {
+            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.AccountNumber == accNumber);
+            if (account == null) return NotFound();
+
+            var request = new AccountDTO
+            {
+                AccountId = account.AccountId,
+                Name = account.Name,
+                Type = account.Type,
+                AccountNumber = account.AccountNumber,
+                InitialBalance = account.InitialBalance,
+                CurrentBalance = account.CurrentBalance,
+                UserId = account.UserId
+            };
+
+            return Ok(request);
         }
 
         [HttpPost]
-        public async Task<ActionResult<AccountDTO>> CreateAccount(CreateAccountDTO dto)
+        public async Task<ActionResult<AccountDTO>> CreateAccount(CreateAccountDTO request)
         {
             var account = new TBLAccount
             {
                 AccountId = Guid.NewGuid(),
-                Name = dto.Name,
-                Type = dto.Type,
-                InitialBalance = dto.InitialBalance,
-                CurrentBalance = dto.InitialBalance,
-                UserId = dto.UserId
+                Name = request.Name,
+                Type = request.Type,
+                AccountNumber = request.AccountNumber,
+                InitialBalance = request.InitialBalance,
+                CurrentBalance = request.InitialBalance,
+                UserId = request.UserId
             };
 
             _context.Accounts.Add(account);
@@ -72,12 +95,13 @@ namespace MyFin.Controller
                 AccountId = account.AccountId,
                 Name = account.Name,
                 Type = account.Type,
+                AccountNumber = request.AccountNumber,
                 InitialBalance = account.InitialBalance,
                 CurrentBalance = account.CurrentBalance,
                 UserId = account.UserId
             };
 
-            return CreatedAtAction(nameof(GetAccount), new { id = account.AccountId }, result);
+            return CreatedAtAction(nameof(GetAccountById), new { id = account.AccountId }, result);
         }
 
         [HttpPut("{id:guid}")]
