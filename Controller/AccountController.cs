@@ -59,6 +59,9 @@ namespace MyFin.Controller
             var account = await _context.Accounts.FirstOrDefaultAsync(a => a.AccountNumber == accNumber);
             if (account == null) return NotFound();
 
+            var transactions = await _context.Transactions.CountAsync(a => a.UserId == account.UserId);
+            if (transactions == 0) return NotFound();
+
             var request = new AccountDTO
             {
                 AccountId = account.AccountId,
@@ -67,7 +70,8 @@ namespace MyFin.Controller
                 AccountNumber = account.AccountNumber,
                 InitialBalance = account.InitialBalance,
                 CurrentBalance = account.CurrentBalance,
-                UserId = account.UserId
+                UserId = account.UserId,
+                TotalTransactions = transactions
             };
 
             return Ok(request);
