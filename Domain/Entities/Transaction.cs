@@ -14,7 +14,7 @@ namespace MyFin.Domain.Entities
 
         // FKs
         public Guid AccountId { get; set; }
-        public Guid? CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
         public Guid UserId { get; set; }
 
         // Navigations

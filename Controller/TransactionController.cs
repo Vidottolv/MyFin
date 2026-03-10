@@ -50,20 +50,27 @@ namespace MyFin.Controller
         }
 
         [HttpPost]
-        public async Task<ActionResult<TransactionDTO>> CreateTransaction(CreateTransactionDTO dto)
+        public async Task<ActionResult<TransactionDTO>> CreateTransaction(CreateTransactionDTO request)
         {
-            var account = await _context.Accounts.FindAsync(dto.AccountId);
-            if (account == null) return NotFound("Conta não encontrada.");
+            var user = await _context.Users.FirstOrDefaultAsync(a => a.Email == request.Email );
+            if (user == null) return NotFound($"Usuário {request.Email} não encontrado.");
+
+            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.AccountNumber == request.AccountNumber);
+            if (account == null) return NotFound($"Conta {request.AccountNumber} não encontrada.");
+            
+            var category = await _context.Categories.FirstOrDefaultAsync(a => a.Type == request.CategoryType);
+            if (category == null) return NotFound($"Categoria de gasto {request.Type} não encontrada.");
 
             var Transaction = new TBLTransaction
             {
                 TransactionId = Guid.NewGuid(),
-                Type = dto.Type,
-                UserId = dto.UserId,
-                Description = dto.Description,
-                Amount =  dto.Type == TransactionType.Income ? dto.Amount : -dto.Amount,
-                CategoryId = dto.CategoryId,
-                AccountId = dto.AccountId
+                Type = request.Type,
+                UserId = user.UserId,
+                Description = request.Description,
+                Amount =  request.Type == TransactionType.Income ? request.Amount : -request.Amount,
+                DtTimeStamp = DateTime.UtcNow,
+                CategoryId = category.CategoryId,
+                AccountId = account.AccountId
             };
             _context.Transactions.Add(Transaction);
             await _context.SaveChangesAsync();

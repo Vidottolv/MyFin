@@ -16,11 +16,10 @@ namespace MyFin.Application.DTOs
 
     public class CreateTransactionDTO
     {
-        public Guid TransactionId { get; set; }
+        public string Email { get; set; }
+        public string AccountNumber { get; set; }
         public TransactionType Type { get; set; }
-        public Guid UserId { get; set; }
-        public Guid AccountId { get; set; }
-        public Guid? CategoryId { get; set; }
+        public string CategoryType { get; set; }
         public string Description { get; set; }
         public decimal Amount { get; set; }
     }
