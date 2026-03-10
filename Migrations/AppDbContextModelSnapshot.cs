@@ -55,7 +55,7 @@ namespace MyFin.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("CategoryId")
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
@@ -74,6 +74,8 @@ namespace MyFin.Migrations
                     b.HasKey("TransactionId");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("UserId", "DtTimeStamp");
 
@@ -107,6 +109,11 @@ namespace MyFin.Migrations
                 {
                     b.Property<Guid>("AccountId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AccountNumber")
+                        .IsRequired()
+                        .HasMaxLength(16)
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("CurrentBalance")
@@ -152,7 +159,7 @@ namespace MyFin.Migrations
 
                     b.HasOne("MyFin.Domain.Entities.TBLCategory", "Category")
                         .WithMany()
-                        .HasForeignKey("AccountId");
+                        .HasForeignKey("CategoryId");
 
                     b.HasOne("MyFin.Domain.Entities.TBLUser", "User")
                         .WithMany("Transactions")

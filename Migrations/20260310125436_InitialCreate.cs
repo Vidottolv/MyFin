@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MyFin.Migrations
 {
     /// <inheritdoc />
-    public partial class initSchema : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,6 +34,7 @@ namespace MyFin.Migrations
                     Type = table.Column<string>(type: "TEXT", nullable: false),
                     InitialBalance = table.Column<decimal>(type: "TEXT", nullable: false),
                     CurrentBalance = table.Column<decimal>(type: "TEXT", nullable: false),
+                    AccountNumber = table.Column<string>(type: "TEXT", maxLength: 16, nullable: false),
                     UserId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -51,14 +52,14 @@ namespace MyFin.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    IDCategory = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Type = table.Column<string>(type: "TEXT", nullable: false, defaultValue: "Expense"),
                     UserId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.IDCategory);
+                    table.PrimaryKey("PK_Categories", x => x.CategoryId);
                     table.ForeignKey(
                         name: "FK_Categories_Users_UserId",
                         column: x => x.UserId,
@@ -74,8 +75,9 @@ namespace MyFin.Migrations
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     Amount = table.Column<decimal>(type: "TEXT", nullable: false),
                     DtTimeStamp = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false),
                     AccountId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CategoryId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    CategoryId = table.Column<Guid>(type: "TEXT", nullable: false),
                     UserId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -88,10 +90,10 @@ namespace MyFin.Migrations
                         principalColumn: "AccountId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Transactions_Categories_AccountId",
-                        column: x => x.AccountId,
+                        name: "FK_Transactions_Categories_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "IDCategory");
+                        principalColumn: "CategoryId");
                     table.ForeignKey(
                         name: "FK_Transactions_Users_UserId",
                         column: x => x.UserId,
@@ -114,6 +116,11 @@ namespace MyFin.Migrations
                 name: "IX_Transactions_AccountId",
                 table: "Transactions",
                 column: "AccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_CategoryId",
+                table: "Transactions",
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_UserId_DtTimeStamp",

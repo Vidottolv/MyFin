@@ -11,8 +11,8 @@ using MyFin.Persistence;
 namespace MyFin.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260224225836_alterCategoryId_alterTransactionType")]
-    partial class alterCategoryId_alterTransactionType
+    [Migration("20260310125436_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,7 +58,7 @@ namespace MyFin.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("CategoryId")
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
@@ -77,6 +77,8 @@ namespace MyFin.Migrations
                     b.HasKey("TransactionId");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("UserId", "DtTimeStamp");
 
@@ -110,6 +112,11 @@ namespace MyFin.Migrations
                 {
                     b.Property<Guid>("AccountId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AccountNumber")
+                        .IsRequired()
+                        .HasMaxLength(16)
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("CurrentBalance")
@@ -155,7 +162,7 @@ namespace MyFin.Migrations
 
                     b.HasOne("MyFin.Domain.Entities.TBLCategory", "Category")
                         .WithMany()
-                        .HasForeignKey("AccountId");
+                        .HasForeignKey("CategoryId");
 
                     b.HasOne("MyFin.Domain.Entities.TBLUser", "User")
                         .WithMany("Transactions")

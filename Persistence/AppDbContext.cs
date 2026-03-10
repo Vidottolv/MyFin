@@ -26,7 +26,7 @@ namespace MyFin.Persistence
             modelBuilder.Entity<TBLTransaction>()
                 .HasOne(t => t.Category)          
                 .WithMany()                       
-                .HasForeignKey(t => t.AccountId) 
+                .HasForeignKey(t => t.CategoryId) 
                 .IsRequired(false);
 
             modelBuilder.Entity<TBLAccount>()
